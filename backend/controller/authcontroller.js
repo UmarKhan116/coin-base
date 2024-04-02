@@ -86,25 +86,26 @@ const authController = {
     }
   },
   async login(req, res, next) {
+    debugger
     // 1. validate user input
     // 2. if validation error, return error
     // 3. match username and password
     // 4. return response
     const userLoginSchema = Joi.object({
-      username: Joi.string().min(5).max(30).required(),
-      password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+      Username: Joi.string().min(5).max(30).required(),
+      Password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
     });
 
-    const { error } = userLoginSchema.validate(req.body);
+    const { error } = userLoginSchema.validate(req?.body);
     if (error) {
       return next(error);
     }
     let user;
 
-    const { username, password } = req.body;
+    const { Username, Password } = req.body;
     console.log(req.body);
     try {
-      user = await User.findOne({ Username: username });
+      user = await User.findOne({ Username: Username });
       if (!user) {
         const error = {
           status: 401,
@@ -112,7 +113,7 @@ const authController = {
         };
         return next(error);
       }
-      const matchpass = await bcrypt.compare(password, user.Password);
+      const matchpass = await bcrypt.compare(Password, user.Password);
       if (!matchpass) {
         const error = {
           status: 401,
@@ -168,7 +169,7 @@ const authController = {
   },
 
   async refresh(req, res, next){
-   
+   debugger
     console.log(req)
       // 1. get refreshToken from cookies
     // 2. verify refreshToken
